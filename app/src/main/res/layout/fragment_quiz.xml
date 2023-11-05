@@ -1,6 +1,93 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_marginTop="32dp"> <!-- Added margin to move content lower -->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Quiz Question 1 -->
+    <TextView
+        android:id="@+id/questionText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What is the capital of Alabama?"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <!-- Answer Choices 1 -->
+    <RadioGroup
+        android:id="@+id/answerChoices1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/questionText1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/choiceA1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A. Montgomery" />
+
+        <RadioButton
+            android:id="@+id/choiceB1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B. Birmingham" />
+
+        <RadioButton
+            android:id="@+id/choiceC1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C. Mobile" />
+    </RadioGroup>
+
+    <!-- Quiz Question 2 -->
+    <TextView
+        android:id="@+id/questionText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What is the largest city in Alabama?"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/answerChoices1"
+        android:layout_marginTop="16dp" />
+
+    <!-- Answer Choices 2 -->
+    <RadioGroup
+        android:id="@+id/answerChoices2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/questionText2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/choiceA2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A. Montgomery" />
+
+        <RadioButton
+            android:id="@+id/choiceB2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B. Birmingham" />
+
+        <RadioButton
+            android:id="@+id/choiceC2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C. Mobile" />
+    </RadioGroup>
+
+    <!-- Swipe Left Text -->
+    <TextView
+        android:id="@+id/swipeLeftText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Swipe left for the next question"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/answerChoices2"
+        android:layout_marginTop="16dp" />
+</RelativeLayout>
