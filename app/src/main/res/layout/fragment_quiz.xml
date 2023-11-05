@@ -2,9 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
-    android:layout_marginTop="32dp"> <!-- Added margin to move content lower -->
+    android:layout_marginTop="32dp">
 
-    <!-- Quiz Question 1 -->
     <TextView
         android:id="@+id/questionText1"
         android:layout_width="wrap_content"
@@ -14,7 +13,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp" />
 
-    <!-- Answer Choices 1 -->
     <RadioGroup
         android:id="@+id/answerChoices1"
         android:layout_width="wrap_content"
@@ -42,7 +40,6 @@
             android:text="C. Mobile" />
     </RadioGroup>
 
-    <!-- Quiz Question 2 -->
     <TextView
         android:id="@+id/questionText2"
         android:layout_width="wrap_content"
@@ -53,7 +50,6 @@
         android:layout_below="@+id/answerChoices1"
         android:layout_marginTop="16dp" />
 
-    <!-- Answer Choices 2 -->
     <RadioGroup
         android:id="@+id/answerChoices2"
         android:layout_width="wrap_content"
@@ -81,13 +77,12 @@
             android:text="C. Mobile" />
     </RadioGroup>
 
-    <!-- Swipe Left Text -->
     <TextView
         android:id="@+id/swipeLeftText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Swipe left for the next question"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/answerChoices2"
-        android:layout_marginTop="16dp" />
+        android:layout_marginBottom="80dp"
+        android:text="Swipe left for the next question"></TextView>
 </RelativeLayout>
