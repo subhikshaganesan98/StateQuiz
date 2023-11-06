@@ -21,6 +21,10 @@ public class State {
         this.capitalSince = capitalSince;
     }
 
+    public State() {
+        this.id = -1;
+    }
+
     //getters
     public long getId() {return this.id;}
     public String getStateName() {return this.stateName;}
@@ -40,4 +44,8 @@ public class State {
     public void setCapitalSince(String capitalSince) {this.capitalSince = capitalSince;}
     public void setSizeRank(int sizeRank) {this.sizeRank = sizeRank;}
     public void setStatehoodYear(int statehoodYear) {this.statehoodYear = statehoodYear;}
+
+    public String toString() {
+        return id + ": " + stateName + " (Capital: " + capitalCity + ", Second City: " + secondCity + ", Third City: " + thirdCity + ")";
+    }
 }

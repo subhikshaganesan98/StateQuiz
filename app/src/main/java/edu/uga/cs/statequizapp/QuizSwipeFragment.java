@@ -2,6 +2,7 @@ package edu.uga.cs.statequizapp;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,8 @@ import java.util.List;
 public class QuizSwipeFragment extends Fragment {
 
     private static final String[] stateCapitals = {};
-
+    private StateQuizDBHelper dbHelper;
+    private SQLiteDatabase db;
 
 
 
@@ -124,7 +126,7 @@ public class QuizSwipeFragment extends Fragment {
         // Shuffle the list to randomize the order
         Collections.shuffle(stateDetailsList);
 
-        // retrieving all values(StateName and cities) from the Row value of stateDetails List index
+        // retriving all values(StateName and cities) from the Row value of stateDetails List index
         String stateName = "Unknown";
         String capitalCity = "Unknown";
         String cityOne = "Unknown";
@@ -155,9 +157,9 @@ public class QuizSwipeFragment extends Fragment {
 
         // updating the frontend of the fragment
         questionView.setText("What is the Capital of " + stateName + "?");
-        capitalCityButton.setText("A. " + capitalCity);
-        cityOneButton.setText("B. " +cityOne);
-        cityTwoButton.setText("C. " +cityTwo);
+        capitalCityButton.setText(capitalCity);
+        cityOneButton.setText(cityOne);
+        cityTwoButton.setText(cityTwo);
 
 
 
