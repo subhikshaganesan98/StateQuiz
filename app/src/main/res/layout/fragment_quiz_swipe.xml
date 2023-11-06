@@ -4,21 +4,26 @@
     android:layout_centerInParent="true"
     android:layout_marginTop="32dp">
 
-    <TextView
-        android:id="@+id/questionView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/CapitalCityQuestionLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:textSize="24sp"
-        android:text="What is the capital city in Alabama?"
-        />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/questionView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Alabama"
+            android:textSize="20sp" />
+    </LinearLayout>
 
     <RadioGroup
         android:id="@+id/answerChoices1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/questionView"
+        android:layout_below="@+id/CapitalCityQuestionLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp">
 
@@ -45,11 +50,11 @@
         android:id="@+id/questionText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="What is the largest city in Alabama?"
-        android:textSize="24sp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/answerChoices1"
-        android:layout_marginTop="16dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Largest City?"
+        android:textSize="24sp" />
 
     <RadioGroup
         android:id="@+id/answerChoices2"
