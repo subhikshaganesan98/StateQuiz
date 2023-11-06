@@ -13,6 +13,7 @@ public class QuizFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
 
+
         ViewPager2 pager = view.findViewById(R.id.viewpager);
         QuizFragmentPagerAdapter avpAdapter = new QuizFragmentPagerAdapter(getChildFragmentManager(), getLifecycle());
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);

@@ -32,34 +32,6 @@ public class QuizSwipeFragment extends Fragment {
     private static final String[] stateCapitals = {};
 
 
-
-
-
-    // Array of Android version code names
-    private static final String[] androidVersions = {
-            "14",
-            "13",
-            "12",
-            "11",
-            "10",
-            "Pie",
-            "Oreo",
-            "Nougat",
-            "Marshmallow",
-            "Lollipop",
-            "KitKat",
-            "Jelly Bean",
-            "Ice Cream Sandwich",
-            "Honeycomb",
-            "Gingerbread",
-            "Froyo",
-            "Eclair",
-            "Donut",
-            "Cupcake",
-            "Petit Four",
-            "Android (No codename)"
-    };
-
     // Array of Android version highlights/brief descriptions
     private static final String[] androidVersionsInfo = {
             "14\nOctober 4, 2023\n\nAndroid 14 is the fourteenth major release and the 21st version of Android, the mobile operating system developed by the Open Handset Alliance led by Google. It was released to the public and the Android Open Source Project (AOSP) on October 04, 2023.\n\nBuilding on the new option added in Android 13 to set languages individually for apps, this feature has been expanded and is easier to implement for developers.  A predictive back gesture animation shows the destination of the back gesture and indicates when the back gesture will close or return to another app. For devices with a larger screen, such as tablets, the taskbar is expanded in Android 14 and now shows the names of the pinned apps.",
@@ -134,7 +106,7 @@ public class QuizSwipeFragment extends Fragment {
 
         try {
             // Open the CSV data file in the assets folder
-            InputStream in_s = getActivity().getAssets().open("StateCapitals.csv");
+            InputStream in_s = getActivity().getAssets().open("StateDetails.csv");
             Log.d("Opening CSV File Status: ", "This works");
 
 

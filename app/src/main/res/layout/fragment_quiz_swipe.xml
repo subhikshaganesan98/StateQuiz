@@ -10,7 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:text="What is the capital city in Alabama?"
+        />
 
     <RadioGroup
         android:id="@+id/answerChoices1"
