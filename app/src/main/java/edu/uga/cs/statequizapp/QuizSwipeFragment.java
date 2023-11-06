@@ -79,10 +79,6 @@ public class QuizSwipeFragment extends Fragment {
         RadioButton cityOneButton = view.findViewById(R.id.choiceB1);
         RadioButton cityTwoButton = view.findViewById(R.id.choiceC1);
 
-        RadioButton capitalCityButton2 = view.findViewById(R.id.choiceA2);
-        RadioButton cityOneButton2 = view.findViewById(R.id.choiceB2);
-        RadioButton cityTwoButton2 = view.findViewById(R.id.choiceC2);
-
 
         // Create a list to store the entire rows from the CSV file as single strings
         List<String> stateDetailsList = new ArrayList<>();
@@ -163,15 +159,12 @@ public class QuizSwipeFragment extends Fragment {
         cityOneButton.setText(cityOne);
         cityTwoButton.setText(cityTwo);
 
-        capitalCityButton2.setText(capitalCity);
-        cityOneButton2.setText(cityOne);
-        cityTwoButton2.setText(cityTwo);
 
 
     }
 
     // This will set the total number of Screens to swipe
     public static int getNumberOfVersions() {
-        return 10;
+        return 6;
     }
 }

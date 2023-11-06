@@ -53,7 +53,7 @@
         android:layout_below="@+id/answerChoices1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Largest City?"
+        android:text="Is The Capital City  The Largest City?"
         android:textSize="24sp" />
 
     <RadioGroup
@@ -68,19 +68,14 @@
             android:id="@+id/choiceA2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="A. Montgomery" />
+            android:text="A. Yes" />
 
         <RadioButton
             android:id="@+id/choiceB2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="B. Birmingham" />
+            android:text="B. No" />
 
-        <RadioButton
-            android:id="@+id/choiceC2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="C. Mobile" />
     </RadioGroup>
 
     <TextView
