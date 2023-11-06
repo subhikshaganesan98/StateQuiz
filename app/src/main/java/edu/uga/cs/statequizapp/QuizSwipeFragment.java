@@ -124,7 +124,7 @@ public class QuizSwipeFragment extends Fragment {
         // Shuffle the list to randomize the order
         Collections.shuffle(stateDetailsList);
 
-        // retriving all values(StateName and cities) from the Row value of stateDetails List index
+        // retrieving all values(StateName and cities) from the Row value of stateDetails List index
         String stateName = "Unknown";
         String capitalCity = "Unknown";
         String cityOne = "Unknown";
@@ -155,9 +155,9 @@ public class QuizSwipeFragment extends Fragment {
 
         // updating the frontend of the fragment
         questionView.setText("What is the Capital of " + stateName + "?");
-        capitalCityButton.setText(capitalCity);
-        cityOneButton.setText(cityOne);
-        cityTwoButton.setText(cityTwo);
+        capitalCityButton.setText("A. " + capitalCity);
+        cityOneButton.setText("B. " +cityOne);
+        cityTwoButton.setText("C. " +cityTwo);
 
 
 

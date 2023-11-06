@@ -20,15 +20,41 @@ public class HomePage extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
 
         Button beginQuizButton = view.findViewById(R.id.beginQuizButton);
+        Button aboutButton = view.findViewById(R.id.aboutButton);
+        Button highScoreButton = view.findViewById(R.id.highScoreButton);
 
         beginQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Replace the current fragment with the QuizFragment
                 QuizFragment quizFragment = new QuizFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, quizFragment);
-                transaction.addToBackStack(null); // Optional: Add to the back stack
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        aboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Replace the current fragment with the AboutGameFragment
+                AboutGameFragment aboutFragment = new AboutGameFragment();
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, aboutFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        highScoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Replace the current fragment with the QuizResultFragment
+                QuizResultFragment resultFragment = new QuizResultFragment();
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, resultFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
