@@ -22,8 +22,7 @@ public class QuizFragmentPagerAdapter extends FragmentStateAdapter {
     //
     @Override
     public int getItemCount() {
-        return QuizSwipeFragment
-                .getNumberOfVersions();
+        return QuizSwipeFragment.getNumberOfVersions();
     }
 
 }

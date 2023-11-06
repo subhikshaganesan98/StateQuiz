@@ -53,7 +53,7 @@
         android:layout_below="@+id/answerChoices1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Is The Capital City  The Largest City?"
+        android:text="Is the capital city the largest city?"
         android:textSize="24sp" />
 
     <RadioGroup
