@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.content.res.Resources;
 import android.util.Log;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -58,10 +57,6 @@ public class QuizSwipeFragment extends Fragment {
         if( getArguments() != null ) {
             versionNum = getArguments().getInt( "versionNum" );
         }
-
-
-
-
     }
 
     @Override
@@ -126,7 +121,7 @@ public class QuizSwipeFragment extends Fragment {
         // Shuffle the list to randomize the order
         Collections.shuffle(stateDetailsList);
 
-        // retriving all values(StateName and cities) from the Row value of stateDetails List index
+        // retrieving all values(StateName and cities) from the Row value of stateDetails List index
         String stateName = "Unknown";
         String capitalCity = "Unknown";
         String cityOne = "Unknown";
@@ -157,12 +152,9 @@ public class QuizSwipeFragment extends Fragment {
 
         // updating the frontend of the fragment
         questionView.setText("What is the Capital of " + stateName + "?");
-        capitalCityButton.setText(capitalCity);
-        cityOneButton.setText(cityOne);
-        cityTwoButton.setText(cityTwo);
-
-
-
+        capitalCityButton.setText("A. " + capitalCity);
+        cityOneButton.setText("B. " + cityOne);
+        cityTwoButton.setText("C. " + cityTwo);
     }
 
     // This will set the total number of Screens to swipe

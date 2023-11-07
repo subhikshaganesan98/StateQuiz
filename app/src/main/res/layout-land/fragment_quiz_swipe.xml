@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:layout_marginTop="32dp">
 
-    <!-- Layout for quiz question -->
     <LinearLayout
         android:id="@+id/CapitalCityQuestionLayout"
         android:layout_width="match_parent"
@@ -21,7 +19,6 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <!-- RadioGroup for answer choices -->
     <RadioGroup
         android:id="@+id/answerChoices1"
         android:layout_width="wrap_content"
@@ -49,7 +46,6 @@
             android:text="C. Mobile" />
     </RadioGroup>
 
-    <!-- Text view for "Is the capital city the largest city?" -->
     <TextView
         android:id="@+id/questionText2"
         android:layout_width="wrap_content"
@@ -60,7 +56,6 @@
         android:text="Is the capital city the largest city?"
         android:textSize="20sp" />
 
-    <!-- RadioGroup for answer choices -->
     <RadioGroup
         android:id="@+id/answerChoices2"
         android:layout_width="wrap_content"
@@ -80,53 +75,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="B. No" />
+
     </RadioGroup>
 
-    <!-- Text view for "Swipe left for the next question" -->
     <TextView
         android:id="@+id/swipeLeftText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:text="Swipe left for the next question" />
-
-    <!-- Layout for quiz results (hidden by default) -->
-    <LinearLayout
-        android:id="@+id/resultsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/resultTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quiz Completed!"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/correctAnswersTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Correct Answers: 0"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/dateTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date and Time: "
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/finishButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Finish Quiz" />
-    </LinearLayout>
+        android:layout_marginBottom="10dp"
+        android:text="Swipe left for the next question"></TextView>
 </RelativeLayout>
