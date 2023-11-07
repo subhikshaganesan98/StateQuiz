@@ -45,6 +45,10 @@ public class CsvReadingTask extends AsyncTask<Void, Void, List<State>> {
 
                 stateList.add(state);
             }
+
+            // stateList will now be populated with data
+            Log.d("stateList: ", stateList.toString());
+
         } catch (IOException e) {
             Log.e("CSV File Status: ", "Failed to open or read CSV file");
             e.printStackTrace();
