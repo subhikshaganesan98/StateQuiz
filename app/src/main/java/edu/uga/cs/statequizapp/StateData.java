@@ -3,12 +3,16 @@ package edu.uga.cs.statequizapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class StateData {
 
@@ -111,7 +115,7 @@ public class StateData {
         values.put(StateDBHelper.COLUMN_CAPITAL_CITY, state.getCapitalCity());
         values.put(StateDBHelper.COLUMN_SECOND_CITY, state.getSecondCity());
         values.put(StateDBHelper.COLUMN_THIRD_CITY, state.getThirdCity());
-        values.put(StateDBHelper.COLUMN_CAPITAL_CITY, state.getStatehood());
+        values.put(StateDBHelper.COLUMN_STATEHOOD, state.getStatehood());
         values.put(StateDBHelper.COLUMN_CAPITAL_SINCE, state.getCapitalSince());
         values.put(StateDBHelper.COLUMN_SIZE_RANK, state.getSizeRank());
 
@@ -142,14 +146,24 @@ public class StateData {
         Log.d(DEBUG_TAG, "Updated state with id: " + state.getId());
     }
 
-    // Delete a state from the database
+    // This method will delete the DB or a specific row
     public void deleteState(State state) {
-        long id = state.getId();
-        db.delete(StateDBHelper.TABLE_STATES,
-                StateDBHelper.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(id)});
+        SQLiteDatabase db = stateDbHelper.getWritableDatabase();
 
-        Log.d(DEBUG_TAG, "Deleted state with id: " + id);
+        if (state == null) {
+            // Delete all states
+            db.delete(StateDBHelper.TABLE_STATES, null, null);
+            Log.d(DEBUG_TAG, "All states deleted from the database.");
+        } else {
+            // Delete a specific state
+            long id = state.getId();
+            db.delete(StateDBHelper.TABLE_STATES,
+                    StateDBHelper.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(id)});
+            Log.d(DEBUG_TAG, "Deleted state with id: " + id);
+        }
+
+        db.close();
     }
 
     // Retrieve a specific state by its ID
@@ -194,5 +208,50 @@ public class StateData {
 
         return state;
     }
+
+    public List<State> getRandomQuizStates() {
+        List<State> selectedStates = new ArrayList<>();
+        SQLiteDatabase db = stateDbHelper.getReadableDatabase();
+
+        // Get the total number of states in the database
+        long numOfStates = DatabaseUtils.queryNumEntries(db, StateDBHelper.TABLE_STATES);
+
+        // Choose to retrieve the last 50 states or all states if less than 50
+        long startIndex = Math.max(0, numOfStates - 50);
+
+        // Use java.util.Random to generate random indices
+        Random random = new Random();
+
+        Set<Integer> selectedIndices = new HashSet<>(); // Use HashSet to ensure uniqueness
+
+        while (selectedIndices.size() < 6 && startIndex < numOfStates) {
+            int randomIndex = random.nextInt((int) numOfStates);
+
+            // Ensure the index is within the selected range and is unique
+            if (randomIndex >= startIndex && selectedIndices.add(randomIndex)) {
+                Cursor cursor = db.query(
+                        StateDBHelper.TABLE_STATES,
+                        allColumns,
+                        StateDBHelper.COLUMN_ID + " = ?",
+                        new String[]{String.valueOf(randomIndex)},
+                        null, null, null);
+
+                if (cursor != null && cursor.moveToFirst()) {
+                    State state = cursorToState(cursor);
+                    selectedStates.add(state);
+                }
+
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+
+        // Close the database
+        db.close();
+
+        return selectedStates;
+    }
+
 
 }

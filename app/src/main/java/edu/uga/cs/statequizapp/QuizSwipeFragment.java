@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+
 import android.os.AsyncTask;
 
 
@@ -174,13 +176,25 @@ public class QuizSwipeFragment extends Fragment {
 //        }
 //
 //
-        long myStateid = 1323;
 
-        // updating the frontend of the fragment
-        questionView.setText("What is the Capital of " + stateData.retrieveStateById(1375).getName() + "?");
-        capitalCityButton.setText("A. " + stateData.retrieveStateById(1375).getCapitalCity());
-        cityOneButton.setText("B. " + stateData.retrieveStateById(1375).getSecondCity());
-        cityTwoButton.setText("C. " + stateData.retrieveStateById(1375).getThirdCity());
+
+        State retrievedState = stateData.retrieveStateById(2814);
+
+
+        // Get the answer choices
+        List<String> answerChoices = new ArrayList<>();
+        answerChoices.add("A. " + retrievedState.getCapitalCity());
+        answerChoices.add("B. " + retrievedState.getSecondCity());
+        answerChoices.add("C. " + retrievedState.getThirdCity());
+
+        // Shuffle the answer choices using java.util.Random
+        Collections.shuffle(answerChoices, new Random());
+
+        // Update the frontend of the fragment
+        questionView.setText("What is the Capital of " + retrievedState.getName() + "?");
+        capitalCityButton.setText(answerChoices.get(0));
+        cityOneButton.setText(answerChoices.get(1));
+        cityTwoButton.setText(answerChoices.get(2));
 
 
 
@@ -215,6 +229,9 @@ public class QuizSwipeFragment extends Fragment {
                 CSVReader reader = new CSVReader(new InputStreamReader(in_s));
                 String[] nextRow;
 
+                // skipping the first row
+                reader.readNext();
+
                 while ((nextRow = reader.readNext()) != null) {
                     // Parse the data and create a State object
                     State state = new State("Name", "Capital", "Second City", "Third City", 0, 0, 0);
@@ -222,20 +239,13 @@ public class QuizSwipeFragment extends Fragment {
                     state.setCapitalCity(nextRow[1]);
                     state.setSecondCity(nextRow[2]);
                     state.setThirdCity(nextRow[3]);
+                    state.setStatehood(Integer.parseInt(nextRow[4]));
+                    state.setCapitalSince(Integer.parseInt(nextRow[5]));
+                    state.setSizeRank(Integer.parseInt(nextRow[6]));
 
-
-                    try {
-                        // Check if the strings can be parsed to integers
-                        state.setStatehood(Integer.parseInt(nextRow[4]));
-                        state.setCapitalSince(Integer.parseInt(nextRow[5]));
-                        state.setSizeRank(Integer.parseInt(nextRow[6]));
-                    } catch (NumberFormatException e) {
-                        // Handle the case where parsing to integer fails
-                        Log.e("ReadCsvAndStoreStateTask", "Error parsing integers: " + e.getMessage());
-                        continue; // Skip this row and proceed to the next one
-                    }
 
                     states.add(state);
+                    Log.d("Not Retrieved DB State statehood: ", String.valueOf(state.getStatehood()));
                     stateData.storeState(state);
 
                     // Retrieve the ID of the state
@@ -270,8 +280,10 @@ public class QuizSwipeFragment extends Fragment {
 
             stateData.close();
 
+
             return null;
         }
+
 
         // No need for onPostExecute if you're not updating a UI component immediately
     }
