@@ -1,51 +1,104 @@
 package edu.uga.cs.statequizapp;
 
 public class State {
+
     private long id;
-    private String stateName;
+    private String name;
     private String capitalCity;
     private String secondCity;
     private String thirdCity;
-    private int statehoodYear;
-    private String capitalSince;
+    private int statehood;
+    private int capitalSince;
     private int sizeRank;
 
-    // Constructors
-    public State( String stateName, String capitalCity, String secondCity, String thirdCity, int statehoodYear, String capitalSince, int sizeRank ) {
-        this.id = -1;
-        this.stateName = stateName;
+    public State(String name, String capitalCity, String secondCity, String thirdCity,
+                 int statehood, int capitalSince, int sizeRank) {
+        this.name = name;
         this.capitalCity = capitalCity;
         this.secondCity = secondCity;
         this.thirdCity = thirdCity;
-        this.statehoodYear = statehoodYear;
+        this.statehood = statehood;
+        this.capitalSince = capitalSince;
+        this.sizeRank = sizeRank;
+    }
+
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCapitalCity() {
+        return capitalCity;
+    }
+
+    public void setCapitalCity(String capitalCity) {
+        this.capitalCity = capitalCity;
+    }
+
+    public String getSecondCity() {
+        return secondCity;
+    }
+
+    public void setSecondCity(String secondCity) {
+        this.secondCity = secondCity;
+    }
+
+    public String getThirdCity() {
+        return thirdCity;
+    }
+
+    public void setThirdCity(String thirdCity) {
+        this.thirdCity = thirdCity;
+    }
+
+    public int getStatehood() {
+        return statehood;
+    }
+
+    public void setStatehood(int statehood) {
+        this.statehood = statehood;
+    }
+
+    public int getCapitalSince() {
+        return capitalSince;
+    }
+
+    public void setCapitalSince(int capitalSince) {
         this.capitalSince = capitalSince;
     }
 
-    public State() {
-        this.id = -1;
+    public int getSizeRank() {
+        return sizeRank;
     }
 
-    //getters
-    public long getId() {return this.id;}
-    public String getStateName() {return this.stateName;}
-    public String getCapitalCity() {return this.capitalCity;}
-    public String getSecondCity() {return this.secondCity;}
-    public String getThirdCity() {return this.thirdCity;}
-    public int getStatehoodYear() {return this.statehoodYear;}
-    public String getCapitalSince() {return this.capitalSince;}
-    public int getSizeRank() {return sizeRank;}
+    public void setSizeRank(int sizeRank) {
+        this.sizeRank = sizeRank;
+    }
 
-    //setters
-    public void setId(long id) {this.id = id;}
-    public void setStateName(String stateName) {this.stateName = stateName;}
-    public void setCapitalCity(String capitalCity) {this.capitalCity = capitalCity;}
-    public void setSecondCity(String secondCity) {this.secondCity = secondCity;}
-    public void setThirdCity(String thirdCity) {this.thirdCity = thirdCity;}
-    public void setCapitalSince(String capitalSince) {this.capitalSince = capitalSince;}
-    public void setSizeRank(int sizeRank) {this.sizeRank = sizeRank;}
-    public void setStatehoodYear(int statehoodYear) {this.statehoodYear = statehoodYear;}
-
+    @Override
     public String toString() {
-        return id + ": " + stateName + " (Capital: " + capitalCity + ", Second City: " + secondCity + ", Third City: " + thirdCity + ")";
+        return "State{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", capitalCity='" + capitalCity + '\'' +
+                ", secondCity='" + secondCity + '\'' +
+                ", thirdCity='" + thirdCity + '\'' +
+                ", statehood=" + statehood +
+                ", capitalSince=" + capitalSince +
+                ", sizeRank=" + sizeRank +
+                '}';
     }
 }

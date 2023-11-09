@@ -86,9 +86,9 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(stateId)});
 
         if (cursor.moveToFirst()) {
-            state = new State();
+            state = state = new State("Name", "Capital City", "Second City", "Third City", 2022, 2022, 1);
             state.setId(cursor.getLong(cursor.getColumnIndex(STATE_COLUMN_ID)));
-            state.setStateName(cursor.getString(cursor.getColumnIndex(STATE_COLUMN_NAME)));
+            state.setName(cursor.getString(cursor.getColumnIndex(STATE_COLUMN_NAME)));
             state.setCapitalCity(cursor.getString(cursor.getColumnIndex(STATE_COLUMN_CAPITAL)));
             // Add more properties as needed
         }

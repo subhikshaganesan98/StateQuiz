@@ -26,27 +26,42 @@ public class CsvReadingTask extends AsyncTask<Void, Void, List<State>> {
         try {
             // Open the CSV file from the assets folder
             InputStream in_s = context.getAssets().open("StateDetails.csv");
-            Log.d("CSV File Status: ", "Opened successfully");
+            Log.d("My CSV File Status: ", "Opened successfully");
 
             // Read the CSV data
             CSVReader reader = new CSVReader(new InputStreamReader(in_s));
             String[] nextRow;
 
+            // Create or get an instance of StateDBHelper
+            StateDBHelper stateDBHelper = StateDBHelper.getInstance(context);
+            StateData stateData = new StateData(context);
+            stateData.open();  // Open the database for writing
+
             while ((nextRow = reader.readNext()) != null) {
                 // Parse the data and create a State object
-                State state = new State();
-                state.setStateName(nextRow[0]);
+                State state = new State("Name", "Capital", "Second City", "Third City", 0, 0, 0);
+                state.setName(nextRow[0]);
                 state.setCapitalCity(nextRow[1]);
                 state.setSecondCity(nextRow[2]);
                 state.setThirdCity(nextRow[3]);
-                state.setStatehoodYear(Integer.parseInt(nextRow[4]));
-                state.setCapitalSince(nextRow[5]);
+                state.setStatehood(Integer.parseInt(nextRow[4]));
+                state.setCapitalSince(Integer.parseInt(nextRow[5]));
                 state.setSizeRank(Integer.parseInt(nextRow[6]));
+
+                // Insert the State object into the database
+                long insertedId = stateDBHelper.addState(state);
+                if (insertedId != -1) {
+                    Log.d("DB State Inserted:", state.getName() + ", ID: " + insertedId);
+                } else {
+                    Log.e("DB Insert Error:", "Failed to insert state: " + state.getName());
+                }
 
                 stateList.add(state);
             }
+
+            stateDBHelper.close();  // Close the database after writing
         } catch (IOException e) {
-            Log.e("CSV File Status: ", "Failed to open or read CSV file");
+            Log.e("My Status: ", "Failed to open or read CSV file");
             e.printStackTrace();
         } catch (CsvValidationException e) {
             e.printStackTrace();
@@ -59,15 +74,13 @@ public class CsvReadingTask extends AsyncTask<Void, Void, List<State>> {
     protected void onPostExecute(List<State> stateList) {
         // Use the list of State objects in your Fragment or Activity
         for (State state : stateList) {
-            Log.d("State Name: ", state.getStateName());
+            Log.d("State Name: ", state.getName());
             Log.d("Capital City: ", state.getCapitalCity());
-            Log.d("Statehood Year: ", String.valueOf(state.getStatehoodYear()));
+            Log.d("Statehood Year: ", String.valueOf(state.getStatehood()));
             Log.d("Second City: ", state.getSecondCity());
             Log.d("Third City: ", state.getThirdCity());
-            Log.d("Capital Since: ", state.getCapitalSince());
+            Log.d("Capital Since: ", String.valueOf(state.getCapitalSince()));
             Log.d("Size Rank: ", String.valueOf(state.getSizeRank()));
         }
-
-
     }
 }
