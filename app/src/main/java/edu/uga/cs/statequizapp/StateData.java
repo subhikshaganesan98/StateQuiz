@@ -38,14 +38,18 @@ public class StateData {
 
 
 
-    public List<State> retrieveAllStates() {
+    public List<State> retrieveLast50States() {
         ArrayList<State> states = new ArrayList<>();
         Cursor cursor = null;
         int columnIndex;
 
         try {
-            cursor = db.query(StateDBHelper.TABLE_STATES, allColumns,
-                    null, null, null, null, null);
+            // Adjust the SQL query to retrieve the last 50 rows
+            cursor = db.query(
+                    StateDBHelper.TABLE_STATES, allColumns,
+                    null, null, null, null,
+                    StateDBHelper.COLUMN_ID + " DESC", "50"
+            );
 
             if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
@@ -72,7 +76,6 @@ public class StateData {
                         state.setId(id);
                         states.add(state);
                         Log.d(DEBUG_TAG, "Retrieved State: " + state);
-
                     }
                 }
             }
@@ -128,43 +131,6 @@ public class StateData {
         return state;
     }
 
-    // Update an existing state in the database
-    public void updateState(State state) {
-        ContentValues values = new ContentValues();
-        values.put(StateDBHelper.COLUMN_NAME, state.getName());
-        values.put(StateDBHelper.COLUMN_CAPITAL_CITY, state.getCapitalCity());
-        values.put(StateDBHelper.COLUMN_SECOND_CITY, state.getSecondCity());
-        values.put(StateDBHelper.COLUMN_THIRD_CITY, state.getThirdCity());
-        values.put(StateDBHelper.COLUMN_STATEHOOD, state.getStatehood());
-        values.put(StateDBHelper.COLUMN_CAPITAL_SINCE, state.getCapitalSince());
-        values.put(StateDBHelper.COLUMN_SIZE_RANK, state.getSizeRank());
-
-        db.update(StateDBHelper.TABLE_STATES, values,
-                StateDBHelper.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(state.getId())});
-
-        Log.d(DEBUG_TAG, "Updated state with id: " + state.getId());
-    }
-
-    // This method will delete the DB or a specific row
-    public void deleteState(State state) {
-        SQLiteDatabase db = stateDbHelper.getWritableDatabase();
-
-        if (state == null) {
-            // Delete all states
-            db.delete(StateDBHelper.TABLE_STATES, null, null);
-            Log.d(DEBUG_TAG, "All states deleted from the database.");
-        } else {
-            // Delete a specific state
-            long id = state.getId();
-            db.delete(StateDBHelper.TABLE_STATES,
-                    StateDBHelper.COLUMN_ID + " = ?",
-                    new String[]{String.valueOf(id)});
-            Log.d(DEBUG_TAG, "Deleted state with id: " + id);
-        }
-
-        db.close();
-    }
 
     // Retrieve a specific state by its ID
     public State retrieveStateById(long id) {
@@ -209,49 +175,7 @@ public class StateData {
         return state;
     }
 
-    public List<State> getRandomQuizStates() {
-        List<State> selectedStates = new ArrayList<>();
-        SQLiteDatabase db = stateDbHelper.getReadableDatabase();
 
-        // Get the total number of states in the database
-        long numOfStates = DatabaseUtils.queryNumEntries(db, StateDBHelper.TABLE_STATES);
-
-        // Choose to retrieve the last 50 states or all states if less than 50
-        long startIndex = Math.max(0, numOfStates - 50);
-
-        // Use java.util.Random to generate random indices
-        Random random = new Random();
-
-        Set<Integer> selectedIndices = new HashSet<>(); // Use HashSet to ensure uniqueness
-
-        while (selectedIndices.size() < 6 && startIndex < numOfStates) {
-            int randomIndex = random.nextInt((int) numOfStates);
-
-            // Ensure the index is within the selected range and is unique
-            if (randomIndex >= startIndex && selectedIndices.add(randomIndex)) {
-                Cursor cursor = db.query(
-                        StateDBHelper.TABLE_STATES,
-                        allColumns,
-                        StateDBHelper.COLUMN_ID + " = ?",
-                        new String[]{String.valueOf(randomIndex)},
-                        null, null, null);
-
-                if (cursor != null && cursor.moveToFirst()) {
-                    State state = cursorToState(cursor);
-                    selectedStates.add(state);
-                }
-
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        }
-
-        // Close the database
-        db.close();
-
-        return selectedStates;
-    }
 
 
 }
