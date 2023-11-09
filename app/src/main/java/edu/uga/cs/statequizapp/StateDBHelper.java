@@ -27,7 +27,7 @@ public class StateDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CAPITAL_SINCE = "capital_since";
     public static final String COLUMN_SIZE_RANK = "size_rank";
 
-    public long lastRandomStateId = -1;
+    public long lastRandomStateId = 0;
 
     // Singleton instance
     private static StateDBHelper instance;

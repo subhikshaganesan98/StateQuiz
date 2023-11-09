@@ -34,6 +34,10 @@ public class QuizSwipeFragment extends Fragment {
     private StateQuizDBHelper dbHelper;
     private SQLiteDatabase db;
 
+    // Create a list to store the entire rows from the CSV file as single strings
+    private List<String> stateDetailsList = new ArrayList<>();
+
+    private StateData stateData;
 
 
     // which Android version to display in the fragment
@@ -77,23 +81,19 @@ public class QuizSwipeFragment extends Fragment {
         RadioButton cityTwoButton = view.findViewById(R.id.choiceC1);
 
 
-        // Create a list to store the entire rows from the CSV file as single strings
-        List<String> stateDetailsList = new ArrayList<>();
+
 
         State state = new State("DefaultName", "DefaultCapital", "DefaultSecondCity",
                 "DefaultThirdCity", 0, 0, 0);
 
-        StateData stateData = new StateData(this.getActivity());
+        stateData = new StateData(this.getActivity());
         stateData.open();
         stateData.storeState(state);
         State newState = stateData.retrieveStateById(state.getId());
 
-
         // Create an instance of CsvReadingTask
         CsvReadingTask csvReadingTask = new CsvReadingTask(getContext());
 
-        // Execute the task
-        csvReadingTask.execute();
 
 
         // This is where I will read the CSV file and store it in the stateDetailsList
@@ -177,4 +177,7 @@ public class QuizSwipeFragment extends Fragment {
     public static int getNumberOfVersions() {
         return 6;
     }
+
+
+
 }
