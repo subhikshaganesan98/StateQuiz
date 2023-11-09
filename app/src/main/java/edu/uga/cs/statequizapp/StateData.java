@@ -119,6 +119,7 @@ public class StateData {
         state.setId(id);
 
         Log.d(DEBUG_TAG, "Stored new state with id: " + state.getId());
+        Log.d(DEBUG_TAG, "Stored new state with id, and capital city: " + state.getCapitalCity());
 
         return state;
     }
