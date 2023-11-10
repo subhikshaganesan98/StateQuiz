@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,9 +37,6 @@ import android.os.AsyncTask;
  */
 public class QuizSwipeFragment extends Fragment {
 
-    private static final String[] stateCapitals = {};
-    private StateQuizDBHelper dbHelper;
-    private SQLiteDatabase db;
 
     // Create a list to store the entire rows from the CSV file as single strings
     private List<State> stateDetailsList = new ArrayList<>();
@@ -88,9 +86,17 @@ public class QuizSwipeFragment extends Fragment {
         super.onViewCreated( view, savedInstanceState );
 
         TextView questionView = view.findViewById( R.id.questionView );
+
+        // first set of answer choices
         RadioButton capitalCityButton = view.findViewById(R.id.choiceA1);
         RadioButton cityOneButton = view.findViewById(R.id.choiceB1);
         RadioButton cityTwoButton = view.findViewById(R.id.choiceC1);
+        RadioGroup radioGroup = view.findViewById(R.id.answerChoices1);
+
+        // second set of answer choices
+        RadioGroup radioGroup2 = view.findViewById(R.id.answerChoices2);
+        RadioButton yesButton = view.findViewById(R.id.choiceA2);
+        RadioButton noButton = view.findViewById(R.id.choiceB2);
 
 
 
@@ -115,18 +121,90 @@ public class QuizSwipeFragment extends Fragment {
 
         // Get the answer choices
         List<String> answerChoices = new ArrayList<>();
-        answerChoices.add("A. " + retrievedState.getCapitalCity());
-        answerChoices.add("B. " + retrievedState.getSecondCity());
-        answerChoices.add("C. " + retrievedState.getThirdCity());
+        answerChoices.add(retrievedState.getCapitalCity());
+        answerChoices.add(retrievedState.getSecondCity());
+        answerChoices.add(retrievedState.getThirdCity());
 
         // Shuffle the answer choices using java.util.Random
         Collections.shuffle(answerChoices, new Random());
 
+        // saving the choices:
+        String firstChoice = answerChoices.get(0);
+        String secondChoice = answerChoices.get(1);
+        String thirdChoice = answerChoices.get(2);
+
         // Update the frontend of the fragment
         questionView.setText("What is the Capital of " + retrievedState.getName() + "?");
-        capitalCityButton.setText(answerChoices.get(0));
-        cityOneButton.setText(answerChoices.get(1));
-        cityTwoButton.setText(answerChoices.get(2));
+        capitalCityButton.setText("A: " + firstChoice);
+        cityOneButton.setText("B: " + secondChoice);
+        cityTwoButton.setText("C: " + thirdChoice);
+
+
+        // Set up the OnCheckedChangeListener for the RadioGroup for First Set of Answer Choices
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Handle checked change events here
+                Log.d("CheckedRadioButtonId: ", "" + checkedId);
+
+                // Now, you can check the selected RadioButton based on its ID
+                if (checkedId == capitalCityButton.getId()) {
+                    Log.d("Selected Button: ", "Choice One");
+                    if(retrievedState.getCapitalCity().equals(firstChoice)) {
+                        Log.d("Correct: ", "choice One");
+                    } else {
+                        Log.d("Incorrect: ", "choice One");
+                    }
+                    // Handle logic for the capital city radio button
+                } else if (checkedId == cityOneButton.getId()) {
+                    Log.d("Selected Button: ", "Choice Two");
+                    if(retrievedState.getCapitalCity().equals(secondChoice)) {
+                        Log.d("Correct: ", "choice two");
+                    } else {
+                        Log.d("Incorrect: ", "choice two");
+                    }
+                    // Handle logic for the city one radio button
+                } else if (checkedId == cityTwoButton.getId()) {
+                    Log.d("Selected Button: ", "Choice Three");
+                    if(retrievedState.getCapitalCity().equals(thirdChoice)) {
+                        Log.d("Correct: ", "choice three");
+                    } else {
+                        Log.d("Incorrect: ", "choice three");
+                    }
+                    // Handle logic for the city two radio button
+                }
+            }
+        });
+
+        // Set up the OnCheckedChangeListener for the second RadioGroup
+        radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Handle checked change events here for the second RadioGroup
+                Log.d("CheckedRadioButtonId (Group 2): ", "" + checkedId);
+
+                // Now, you can check the selected RadioButton based on its ID
+                if (checkedId == yesButton.getId()) {
+                    Log.d("Selected Button (Group 2): ", "Yes");
+                    if (retrievedState.getSizeRank() == 1) {
+                        Log.d("Correct: ", "yes");
+                    } else {
+                        Log.d("Incorrect: ", "yes");
+                    }
+                    // Handle logic for the Yes radio button
+                } else if (checkedId == noButton.getId()) {
+                    Log.d("Selected Button (Group 2): ", "No");
+                    if (retrievedState.getSizeRank() > 1) {
+                        Log.d("Correct: ", "no");
+                    } else {
+                        Log.d("Incorrect: ", "no");
+                    }
+                    // Handle logic for the No radio button
+                }
+            }
+        });
+
+
 
 
 
@@ -211,7 +289,6 @@ public class QuizSwipeFragment extends Fragment {
             }
 
             stateData.close();
-
 
             return null;
         }
