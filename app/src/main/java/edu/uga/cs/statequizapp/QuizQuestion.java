@@ -12,7 +12,6 @@ public class QuizQuestion {
     private int question6Id;
     private int correctAnswers;
     private int questionsAnswered;
-    private String timeTaken;
 
     // Constructor with updated parameters
     public QuizQuestion(String quizDate, String time, int question1Id, int question2Id, int question3Id,
@@ -27,7 +26,6 @@ public class QuizQuestion {
         this.question6Id = question6Id;
         this.correctAnswers = correctAnswers;
         this.questionsAnswered = questionsAnswered;
-        this.timeTaken = timeTaken;
     }
 
     // Getters and setters for the fields
@@ -112,11 +110,4 @@ public class QuizQuestion {
         this.questionsAnswered = questionsAnswered;
     }
 
-    public String getTimeTaken() {
-        return timeTaken;
-    }
-
-    public void setTimeTaken(String timeTaken) {
-        this.timeTaken = timeTaken;
-    }
 }
