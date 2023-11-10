@@ -15,7 +15,7 @@ public class QuizQuestion {
 
     // Constructor with updated parameters
     public QuizQuestion(String quizDate, String time, int question1Id, int question2Id, int question3Id,
-                        int question4Id, int question5Id, int question6Id, int correctAnswers, int questionsAnswered, String timeTaken) {
+                        int question4Id, int question5Id, int question6Id, int correctAnswers, int questionsAnswered) {
         this.quizDate = quizDate;
         this.time = time;
         this.question1Id = question1Id;
