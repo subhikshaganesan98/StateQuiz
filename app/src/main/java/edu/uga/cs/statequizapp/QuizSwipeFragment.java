@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import com.opencsv.CSVReader;
@@ -75,6 +76,10 @@ public class QuizSwipeFragment extends Fragment {
                               Bundle savedInstanceState ) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_quiz_swipe, container, false );
+    }
+
+    public int getQuizScore() {
+        return this.versionNum;
     }
 
     @Override
@@ -211,8 +216,9 @@ public class QuizSwipeFragment extends Fragment {
             return null;
         }
 
-
-        // No need for onPostExecute if you're not updating a UI component immediately
+        // Might need to do onPostExecute() to update UI elements asyncronously
     }
+
+
 
 }

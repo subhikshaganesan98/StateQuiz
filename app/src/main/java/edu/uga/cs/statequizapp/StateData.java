@@ -48,7 +48,7 @@ public class StateData {
             cursor = db.query(
                     StateDBHelper.TABLE_STATES, allColumns,
                     null, null, null, null,
-                    StateDBHelper.COLUMN_ID + " DESC", "50"
+                    StateDBHelper.COLUMN_ID + " DESC", "49"
             );
 
             if (cursor != null && cursor.getCount() > 0) {
