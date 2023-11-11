@@ -2,6 +2,8 @@ package edu.uga.cs.statequizapp;
 
 public class QuizQuestion {
 
+    private long id; // Add the ID field
+
     private String quizDate;
     private String time;
     private int question1Id;
@@ -29,6 +31,14 @@ public class QuizQuestion {
     }
 
     // Getters and setters for the fields
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getQuizDate() {
         return quizDate;
@@ -109,5 +119,4 @@ public class QuizQuestion {
     public void setQuestionsAnswered(int questionsAnswered) {
         this.questionsAnswered = questionsAnswered;
     }
-
 }

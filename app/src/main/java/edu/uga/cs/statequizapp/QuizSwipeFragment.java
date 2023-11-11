@@ -193,8 +193,8 @@ public class QuizSwipeFragment extends Fragment {
                 }
 
                 Log.d("Total Question Score: ", "" + questionScore);
-                if(totalQuizScore >= 0)
-                    totalQuizScore += questionScore;
+//                if(totalQuizScore >= 0)
+//                    totalQuizScore += questionScore;
 
             }
         });
@@ -237,8 +237,8 @@ public class QuizSwipeFragment extends Fragment {
                 }
 
                 Log.d("Total Question Score: ", "" + questionScore);
-                if(totalQuizScore >= 0)
-                    totalQuizScore += questionScore;
+//                if(totalQuizScore >= 0)
+//                    totalQuizScore += questionScore;
             }
 
 
@@ -246,14 +246,35 @@ public class QuizSwipeFragment extends Fragment {
 
         });
 
-        Log.d("Quiz Score:", "" + totalQuizScore);
+
 
         // This part will deal with QuizQuestionDB
         QuizQuestionData quizQuestionData = new QuizQuestionData(this.getActivity());
         quizQuestionData.open();
 
-        QuizQuestion newQuestion = new QuizQuestion("2023-11-10", "12:00 PM", 1, 2, 3, 4, 5, 6, 4, 6);
-        long questionId = quizQuestionData.addQuizQuestion(newQuestion);
+        QuizQuestion retrievedQuestion = quizQuestionData.getLatestQuizQuestion();
+        Log.d("QuizQuestionID: ", "" + retrievedQuestion.getId());
+
+        Log.d("Version Num: ", "" + versionNum);
+        // Set the new value for repective quiz question Column Id Values
+        if (versionNum == 0) {
+            retrievedQuestion.setQuestion1Id(questionScore);
+        } else if (versionNum == 1) {
+            retrievedQuestion.setQuestion2Id(questionScore);
+        } else if (versionNum == 2) {
+            retrievedQuestion.setQuestion3Id(questionScore);
+        } else if (versionNum == 3) {
+            retrievedQuestion.setQuestion4Id(questionScore);
+        } else if (versionNum == 4) {
+            retrievedQuestion.setQuestion5Id(questionScore);
+        } else if (versionNum == 5) {
+            retrievedQuestion.setQuestion6Id(questionScore);
+        }
+
+
+        // Update the quiz question in the database
+        quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
+
 
 
 
@@ -350,6 +371,7 @@ public class QuizSwipeFragment extends Fragment {
 
         // Might need to do onPostExecute() to update UI elements asyncronously
     }
+
 
 
 
