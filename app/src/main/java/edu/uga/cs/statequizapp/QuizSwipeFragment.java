@@ -45,6 +45,11 @@ public class QuizSwipeFragment extends Fragment {
 
     private long lastStateIndex = 0;
 
+    // Declare a variable to store the total quiz score
+    private int totalQuizScore = 0;
+
+    private int questionScore = 0;
+
 
     // which Android version to display in the fragment
     private int versionNum;
@@ -149,35 +154,55 @@ public class QuizSwipeFragment extends Fragment {
 
                 // Now, you can check the selected RadioButton based on its ID
                 if (checkedId == capitalCityButton.getId()) {
-                    Log.d("Selected Button: ", "Choice One");
+                    Log.d("Selected Button: ", "Choice One" + ", " + retrievedState.getName());
                     if(retrievedState.getCapitalCity().equals(firstChoice)) {
-                        Log.d("Correct: ", "choice One");
+                        Log.d("Correct: ", "choice One" + ", " + retrievedState.getName());
+                        if(questionScore <= 2)
+                            questionScore++;
                     } else {
-                        Log.d("Incorrect: ", "choice One");
+                        Log.d("Incorrect: ", "choice One" + ", " + retrievedState.getName());
+                        if(questionScore > 0)
+                            questionScore--;
                     }
                     // Handle logic for the capital city radio button
                 } else if (checkedId == cityOneButton.getId()) {
-                    Log.d("Selected Button: ", "Choice Two");
+                    Log.d("Selected Button: ", "Choice Two" + ", " + retrievedState.getName());
                     if(retrievedState.getCapitalCity().equals(secondChoice)) {
-                        Log.d("Correct: ", "choice two");
+                        Log.d("Correct: ", "choice two" + ", " + retrievedState.getName());
+                        if(questionScore <= 2)
+                            questionScore++;
+
                     } else {
-                        Log.d("Incorrect: ", "choice two");
+                        Log.d("Incorrect: ", "choice two" + ", " + retrievedState.getName());
+                        if(questionScore > 0)
+                            questionScore--;
                     }
                     // Handle logic for the city one radio button
                 } else if (checkedId == cityTwoButton.getId()) {
-                    Log.d("Selected Button: ", "Choice Three");
+                    Log.d("Selected Button: ", "Choice Three" + ", " + retrievedState.getName());
                     if(retrievedState.getCapitalCity().equals(thirdChoice)) {
-                        Log.d("Correct: ", "choice three");
+                        Log.d("Correct: ", "choice three" + ", " + retrievedState.getName());
+                        if(questionScore <= 2)
+                            questionScore++;
                     } else {
-                        Log.d("Incorrect: ", "choice three");
+                        Log.d("Incorrect: ", "choice three" + ", " + retrievedState.getName());
+                        if(questionScore > 0)
+                            questionScore--;
                     }
                     // Handle logic for the city two radio button
                 }
+
+                Log.d("Total Question Score: ", "" + questionScore);
+                if(totalQuizScore >= 0)
+                    totalQuizScore += questionScore;
+
             }
         });
 
         // Set up the OnCheckedChangeListener for the second RadioGroup
         radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // Handle checked change events here for the second RadioGroup
@@ -185,30 +210,60 @@ public class QuizSwipeFragment extends Fragment {
 
                 // Now, you can check the selected RadioButton based on its ID
                 if (checkedId == yesButton.getId()) {
-                    Log.d("Selected Button (Group 2): ", "Yes");
+                    Log.d("Selected Button (Group 2): ", "Yes" + ", " + retrievedState.getName());
                     if (retrievedState.getSizeRank() == 1) {
-                        Log.d("Correct: ", "yes");
+                        Log.d("Correct: ", "yes" + ", " + retrievedState.getName());
+                        if(questionScore <= 2)
+                            questionScore++;
+                        Log.d("Total Quiz Score: ", "" + questionScore);
                     } else {
-                        Log.d("Incorrect: ", "yes");
+                        Log.d("Incorrect: ", "yes" + ", " + retrievedState.getName());
+                        if(questionScore > 0)
+                            questionScore--;
                     }
                     // Handle logic for the Yes radio button
                 } else if (checkedId == noButton.getId()) {
-                    Log.d("Selected Button (Group 2): ", "No");
+                    Log.d("Selected Button (Group 2): ", "No" + ", " + retrievedState.getName());
                     if (retrievedState.getSizeRank() > 1) {
-                        Log.d("Correct: ", "no");
+                        Log.d("Correct: ", "no" + ", " + retrievedState.getName());
+                        if(questionScore <= 2)
+                            questionScore++;
                     } else {
-                        Log.d("Incorrect: ", "no");
+                        Log.d("Incorrect: ", "no" + ", " + retrievedState.getName());
+                        if(questionScore > 0)
+                            questionScore--;
                     }
                     // Handle logic for the No radio button
                 }
+
+                Log.d("Total Question Score: ", "" + questionScore);
+                if(totalQuizScore >= 0)
+                    totalQuizScore += questionScore;
             }
+
+
+
+
         });
+
+        Log.d("Quiz Score:", "" + totalQuizScore);
+
+        // This part will deal with QuizQuestionDB
+        QuizQuestionData quizQuestionData = new QuizQuestionData(this.getActivity());
+        quizQuestionData.open();
+
+        QuizQuestion newQuestion = new QuizQuestion("2023-11-10", "12:00 PM", 1, 2, 3, 4, 5, 6, 4, 6);
+        long questionId = quizQuestionData.addQuizQuestion(newQuestion);
+
 
 
 
 
 
     }
+
+
+
 
     // This will set the total number of Screens to swipe
     public static int getNumberOfVersions() {

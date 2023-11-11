@@ -104,6 +104,7 @@ public class StateDBHelper extends SQLiteOpenHelper {
         return state;
     }
 
+
     // Get a list of all states in the database
     public List<State> getAllStates() {
         List<State> states = new ArrayList<>();
