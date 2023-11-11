@@ -144,6 +144,13 @@ public class QuizSwipeFragment extends Fragment {
         cityOneButton.setText("B: " + secondChoice);
         cityTwoButton.setText("C: " + thirdChoice);
 
+        // This part will deal with QuizQuestionDB
+        QuizQuestionData quizQuestionData = new QuizQuestionData(this.getActivity());
+        quizQuestionData.open();
+
+        QuizQuestion retrievedQuestion = quizQuestionData.getLatestQuizQuestion();
+        Log.d("QuizQuestionID: ", "" + retrievedQuestion.getId());
+
 
         // Set up the OnCheckedChangeListener for the RadioGroup for First Set of Answer Choices
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -161,7 +168,7 @@ public class QuizSwipeFragment extends Fragment {
                             questionScore++;
                     } else {
                         Log.d("Incorrect: ", "choice One" + ", " + retrievedState.getName());
-                        if(questionScore > 0)
+                        if(questionScore > 2)
                             questionScore--;
                     }
                     // Handle logic for the capital city radio button
@@ -174,7 +181,7 @@ public class QuizSwipeFragment extends Fragment {
 
                     } else {
                         Log.d("Incorrect: ", "choice two" + ", " + retrievedState.getName());
-                        if(questionScore > 0)
+                        if(questionScore > 2)
                             questionScore--;
                     }
                     // Handle logic for the city one radio button
@@ -186,18 +193,44 @@ public class QuizSwipeFragment extends Fragment {
                             questionScore++;
                     } else {
                         Log.d("Incorrect: ", "choice three" + ", " + retrievedState.getName());
-                        if(questionScore > 0)
+                        if(questionScore > 2)
                             questionScore--;
+
                     }
                     // Handle logic for the city two radio button
                 }
 
                 Log.d("Total Question Score: ", "" + questionScore);
-//                if(totalQuizScore >= 0)
-//                    totalQuizScore += questionScore;
+
+                Log.d("Version Num: ", "" + versionNum);
+                // Set the new value for repective quiz question Column Id Values
+                if (versionNum == 0) {
+                    retrievedQuestion.setQuestion1Id(questionScore);
+                    Log.d("Question 1 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 1) {
+                    retrievedQuestion.setQuestion2Id(questionScore);
+                    Log.d("Question 2 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 2) {
+                    retrievedQuestion.setQuestion3Id(questionScore);
+                    Log.d("Question 3 Score Stored: ", ""+questionScore);
+                } else if (versionNum == 3) {
+                    retrievedQuestion.setQuestion4Id(questionScore);
+                    Log.d("Question 4 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 4) {
+                    retrievedQuestion.setQuestion5Id(questionScore);
+                    Log.d("Question 5 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 5) {
+                    retrievedQuestion.setQuestion6Id(questionScore);
+                    Log.d("Question 6 Score Stored: ", ""+ questionScore);
+                }
+
+                // Update the quiz question in the database
+                quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
 
             }
         });
+
+
 
         // Set up the OnCheckedChangeListener for the second RadioGroup
         radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -218,8 +251,9 @@ public class QuizSwipeFragment extends Fragment {
                         Log.d("Total Quiz Score: ", "" + questionScore);
                     } else {
                         Log.d("Incorrect: ", "yes" + ", " + retrievedState.getName());
-                        if(questionScore > 0)
+                        if(questionScore > 2)
                             questionScore--;
+
                     }
                     // Handle logic for the Yes radio button
                 } else if (checkedId == noButton.getId()) {
@@ -230,15 +264,39 @@ public class QuizSwipeFragment extends Fragment {
                             questionScore++;
                     } else {
                         Log.d("Incorrect: ", "no" + ", " + retrievedState.getName());
-                        if(questionScore > 0)
+                        if(questionScore > 2)
                             questionScore--;
+
                     }
                     // Handle logic for the No radio button
                 }
 
                 Log.d("Total Question Score: ", "" + questionScore);
-//                if(totalQuizScore >= 0)
-//                    totalQuizScore += questionScore;
+//
+                Log.d("Version Num: ", "" + versionNum);
+                // Set the new value for repective quiz question Column Id Values
+                if (versionNum == 0) {
+                    retrievedQuestion.setQuestion1Id(questionScore);
+                    Log.d("Question 1 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 1) {
+                    retrievedQuestion.setQuestion2Id(questionScore);
+                    Log.d("Question 2 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 2) {
+                    retrievedQuestion.setQuestion3Id(questionScore);
+                    Log.d("Question 3 Score Stored: ", ""+questionScore);
+                } else if (versionNum == 3) {
+                    retrievedQuestion.setQuestion4Id(questionScore);
+                    Log.d("Question 4 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 4) {
+                    retrievedQuestion.setQuestion5Id(questionScore);
+                    Log.d("Question 5 Score Stored: ", ""+ questionScore);
+                } else if (versionNum == 5) {
+                    retrievedQuestion.setQuestion6Id(questionScore);
+                    Log.d("Question 6 Score Stored: ", ""+ questionScore);
+                }
+
+                // Update the quiz question in the database
+                quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
             }
 
 
@@ -248,33 +306,6 @@ public class QuizSwipeFragment extends Fragment {
 
 
 
-        // This part will deal with QuizQuestionDB
-        QuizQuestionData quizQuestionData = new QuizQuestionData(this.getActivity());
-        quizQuestionData.open();
-
-        QuizQuestion retrievedQuestion = quizQuestionData.getLatestQuizQuestion();
-        Log.d("QuizQuestionID: ", "" + retrievedQuestion.getId());
-
-        Log.d("Version Num: ", "" + versionNum);
-        // Set the new value for repective quiz question Column Id Values
-        if (versionNum == 0) {
-            retrievedQuestion.setQuestion1Id(questionScore);
-        } else if (versionNum == 1) {
-            retrievedQuestion.setQuestion2Id(questionScore);
-        } else if (versionNum == 2) {
-            retrievedQuestion.setQuestion3Id(questionScore);
-        } else if (versionNum == 3) {
-            retrievedQuestion.setQuestion4Id(questionScore);
-        } else if (versionNum == 4) {
-            retrievedQuestion.setQuestion5Id(questionScore);
-        } else if (versionNum == 5) {
-            retrievedQuestion.setQuestion6Id(questionScore);
-        }
-
-
-        // Update the quiz question in the database
-        quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
-
 
 
 
@@ -282,8 +313,6 @@ public class QuizSwipeFragment extends Fragment {
 
 
     }
-
-
 
 
     // This will set the total number of Screens to swipe
