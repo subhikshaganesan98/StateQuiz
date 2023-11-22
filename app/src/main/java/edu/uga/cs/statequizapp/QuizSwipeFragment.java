@@ -49,6 +49,28 @@ public class QuizSwipeFragment extends Fragment {
     private int totalQuizScore = 0;
 
     private int questionScore = 0;
+    private int groupOneScore = 0;
+    private int groupTwoScore = 0;
+    private int totalGroupScore = 0;
+
+    private boolean checkGroup1 = false;
+    private boolean checkGroup2 = false;
+
+    private QuizQuestionData quizQuestionData;
+    private QuizQuestion retrievedQuestion;
+
+    // flag variable for selecting wrong choices in group 2 consequtively
+    private boolean checkConsequtiveIncorrect = false;
+
+    private int questionScore2 = 0;
+
+
+    // instance variables to handle the questionsAnswered
+    private int groupOneSelection = 0;
+    private int groupTwoSelection = 0;
+    private boolean groupOneAnswered = false;
+    private boolean groupTwoAnswered = false;
+
 
 
     // which Android version to display in the fragment
@@ -58,39 +80,36 @@ public class QuizSwipeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static QuizSwipeFragment newInstance( int versionNum ) {
+    public static QuizSwipeFragment newInstance(int versionNum) {
         QuizSwipeFragment fragment = new QuizSwipeFragment();
         Bundle args = new Bundle();
-        args.putInt( "versionNum", versionNum );
-        fragment.setArguments( args );
+        args.putInt("versionNum", versionNum);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        if( getArguments() != null ) {
-            versionNum = getArguments().getInt( "versionNum" );
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            versionNum = getArguments().getInt("versionNum");
         }
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_quiz_swipe, container, false );
+        return inflater.inflate(R.layout.fragment_quiz_swipe, container, false);
     }
 
-    public int getQuizScore() {
-        return this.versionNum;
-    }
 
     @Override
-    public void onViewCreated( @NonNull View view, Bundle savedInstanceState ) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         //public void onActivityCreated(Bundle savedInstanceState) {
-        super.onViewCreated( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
 
-        TextView questionView = view.findViewById( R.id.questionView );
+        TextView questionView = view.findViewById(R.id.questionView);
 
         // first set of answer choices
         RadioButton capitalCityButton = view.findViewById(R.id.choiceA1);
@@ -102,8 +121,6 @@ public class QuizSwipeFragment extends Fragment {
         RadioGroup radioGroup2 = view.findViewById(R.id.answerChoices2);
         RadioButton yesButton = view.findViewById(R.id.choiceA2);
         RadioButton noButton = view.findViewById(R.id.choiceB2);
-
-
 
 
         State state = new State("DefaultName", "DefaultCapital", "DefaultSecondCity",
@@ -145,174 +162,254 @@ public class QuizSwipeFragment extends Fragment {
         cityTwoButton.setText("C: " + thirdChoice);
 
         // This part will deal with QuizQuestionDB
-        QuizQuestionData quizQuestionData = new QuizQuestionData(this.getActivity());
+        this.quizQuestionData = new QuizQuestionData(this.getActivity());
         quizQuestionData.open();
 
-        QuizQuestion retrievedQuestion = quizQuestionData.getLatestQuizQuestion();
+        this.retrievedQuestion = quizQuestionData.getLatestQuizQuestion();
         Log.d("QuizQuestionID: ", "" + retrievedQuestion.getId());
 
+        if (savedInstanceState != null) {
+            this.totalGroupScore = savedInstanceState.getInt("totalGroupScore", 0);
+            this.checkGroup1 = savedInstanceState.getBoolean("checkGroup1", false);
+            this.checkGroup2 = savedInstanceState.getBoolean("checkGroup2", false);
+            // Restore other relevant state data here
+        }
 
-        // Set up the OnCheckedChangeListener for the RadioGroup for First Set of Answer Choices
+
+        // radio buttons async tasks
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                String selectedChoice = "";
+
                 // Handle checked change events here
                 Log.d("CheckedRadioButtonId: ", "" + checkedId);
 
-                // Now, you can check the selected RadioButton based on its ID
                 if (checkedId == capitalCityButton.getId()) {
-                    Log.d("Selected Button: ", "Choice One" + ", " + retrievedState.getName());
-                    if(retrievedState.getCapitalCity().equals(firstChoice)) {
-                        Log.d("Correct: ", "choice One" + ", " + retrievedState.getName());
-                        if(questionScore <= 2)
-                            questionScore++;
-                    } else {
-                        Log.d("Incorrect: ", "choice One" + ", " + retrievedState.getName());
-                        if(questionScore > 2)
-                            questionScore--;
-                    }
-                    // Handle logic for the capital city radio button
+                    selectedChoice = firstChoice;
+                    groupOneSelection++;
                 } else if (checkedId == cityOneButton.getId()) {
-                    Log.d("Selected Button: ", "Choice Two" + ", " + retrievedState.getName());
-                    if(retrievedState.getCapitalCity().equals(secondChoice)) {
-                        Log.d("Correct: ", "choice two" + ", " + retrievedState.getName());
-                        if(questionScore <= 2)
-                            questionScore++;
-
-                    } else {
-                        Log.d("Incorrect: ", "choice two" + ", " + retrievedState.getName());
-                        if(questionScore > 2)
-                            questionScore--;
-                    }
-                    // Handle logic for the city one radio button
+                    selectedChoice = secondChoice;
+                    groupOneSelection++;
                 } else if (checkedId == cityTwoButton.getId()) {
-                    Log.d("Selected Button: ", "Choice Three" + ", " + retrievedState.getName());
-                    if(retrievedState.getCapitalCity().equals(thirdChoice)) {
-                        Log.d("Correct: ", "choice three" + ", " + retrievedState.getName());
-                        if(questionScore <= 2)
-                            questionScore++;
+                    selectedChoice = thirdChoice;
+                    groupOneSelection++;
+                }
+
+                if (!selectedChoice.isEmpty()) {
+                    Log.d("Selected Button: ", selectedChoice + ", " + retrievedState.getName());
+
+                    String correctChoice = retrievedState.getCapitalCity();
+
+                    Log.d("Correct Choice Group 1:", correctChoice);
+
+                    if (correctChoice.equals(selectedChoice)) {
+                        Log.d("Correct: ", selectedChoice + ", " + retrievedState.getName());
+                        checkGroup1 = true;
+                        if (totalGroupScore < 2) {
+                            totalGroupScore++;
+                        }
+
+                        // We know that user is not selecting 2 incorrect choices consequtively
+                        checkConsequtiveIncorrect = false;
                     } else {
-                        Log.d("Incorrect: ", "choice three" + ", " + retrievedState.getName());
-                        if(questionScore > 2)
-                            questionScore--;
+                        Log.d("Incorrect: ", selectedChoice + ", " + retrievedState.getName());
 
+                        if (!checkConsequtiveIncorrect){
+                            // If the second group is correct and first is wrong, the first group should not decrease
+                            // the totalGroupSCore to 0
+                            if (totalGroupScore > 0) {
+                                if ((checkGroup2 && totalGroupScore > 1) || !checkGroup2)
+                                    totalGroupScore--;
+                            }
+                        }
+                        checkConsequtiveIncorrect = true;
                     }
-                    // Handle logic for the city two radio button
                 }
 
-                Log.d("Total Question Score: ", "" + questionScore);
+                Log.d("TotalGroupScore: ", "" + totalGroupScore);
+                // handling the update the  UpdateQuizScoresTask quizQuestionScore Async Task
+                new UpdateQuizScoresTask().execute(versionNum, totalGroupScore, retrievedQuestion, quizQuestionData);
 
-                Log.d("Version Num: ", "" + versionNum);
-                // Set the new value for repective quiz question Column Id Values
-                if (versionNum == 0) {
-                    retrievedQuestion.setQuestion1Id(questionScore);
-                    Log.d("Question 1 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 1) {
-                    retrievedQuestion.setQuestion2Id(questionScore);
-                    Log.d("Question 2 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 2) {
-                    retrievedQuestion.setQuestion3Id(questionScore);
-                    Log.d("Question 3 Score Stored: ", ""+questionScore);
-                } else if (versionNum == 3) {
-                    retrievedQuestion.setQuestion4Id(questionScore);
-                    Log.d("Question 4 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 4) {
-                    retrievedQuestion.setQuestion5Id(questionScore);
-                    Log.d("Question 5 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 5) {
-                    retrievedQuestion.setQuestion6Id(questionScore);
-                    Log.d("Question 6 Score Stored: ", ""+ questionScore);
-                }
-
-                // Update the quiz question in the database
-                quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
 
             }
         });
 
 
-
-        // Set up the OnCheckedChangeListener for the second RadioGroup
         radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                boolean checkCorrect = false;
+                boolean checkIncorrect = false;
+                String selectedChoice = "";
+
                 // Handle checked change events here for the second RadioGroup
                 Log.d("CheckedRadioButtonId (Group 2): ", "" + checkedId);
 
-                // Now, you can check the selected RadioButton based on its ID
                 if (checkedId == yesButton.getId()) {
-                    Log.d("Selected Button (Group 2): ", "Yes" + ", " + retrievedState.getName());
-                    if (retrievedState.getSizeRank() == 1) {
-                        Log.d("Correct: ", "yes" + ", " + retrievedState.getName());
-                        if(questionScore <= 2)
-                            questionScore++;
-                        Log.d("Total Quiz Score: ", "" + questionScore);
-                    } else {
-                        Log.d("Incorrect: ", "yes" + ", " + retrievedState.getName());
-                        if(questionScore > 2)
-                            questionScore--;
-
-                    }
-                    // Handle logic for the Yes radio button
+                    selectedChoice = "Yes";
+                    groupTwoSelection++;
                 } else if (checkedId == noButton.getId()) {
-                    Log.d("Selected Button (Group 2): ", "No" + ", " + retrievedState.getName());
-                    if (retrievedState.getSizeRank() > 1) {
-                        Log.d("Correct: ", "no" + ", " + retrievedState.getName());
-                        if(questionScore <= 2)
-                            questionScore++;
+                    selectedChoice = "No";
+                    groupTwoSelection++;
+                }
+
+                if (!selectedChoice.isEmpty()) {
+                    Log.d("Selected Button (Group 2): ", selectedChoice + ", " + retrievedState.getName());
+
+                    String correctChoice = (checkedId == yesButton.getId()) ? "Yes" : "No";
+
+                    if ((checkedId == yesButton.getId() && retrievedState.getSizeRank() == 1) ||
+                            (checkedId == noButton.getId() && retrievedState.getSizeRank() > 1)) {
+                        Log.d("Correct: ", selectedChoice + ", " + retrievedState.getName());
+                        checkGroup2 = true;
+                        if (totalGroupScore < 2) {
+                            totalGroupScore++;
+                        }
                     } else {
-                        Log.d("Incorrect: ", "no" + ", " + retrievedState.getName());
-                        if(questionScore > 2)
-                            questionScore--;
+                        Log.d("Incorrect: ", selectedChoice + ", " + retrievedState.getName());
+                        checkIncorrect = true;
 
+                        // If the first group is correct, the second group should not decrease the totalGroupSCore to 0
+                        if (totalGroupScore > 0) {
+                            if((checkGroup1 && totalGroupScore > 1) || !checkGroup1 )
+                                totalGroupScore--;
+                        }
                     }
-                    // Handle logic for the No radio button
                 }
 
-                Log.d("Total Question Score: ", "" + questionScore);
-//
-                Log.d("Version Num: ", "" + versionNum);
-                // Set the new value for repective quiz question Column Id Values
-                if (versionNum == 0) {
-                    retrievedQuestion.setQuestion1Id(questionScore);
-                    Log.d("Question 1 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 1) {
-                    retrievedQuestion.setQuestion2Id(questionScore);
-                    Log.d("Question 2 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 2) {
-                    retrievedQuestion.setQuestion3Id(questionScore);
-                    Log.d("Question 3 Score Stored: ", ""+questionScore);
-                } else if (versionNum == 3) {
-                    retrievedQuestion.setQuestion4Id(questionScore);
-                    Log.d("Question 4 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 4) {
-                    retrievedQuestion.setQuestion5Id(questionScore);
-                    Log.d("Question 5 Score Stored: ", ""+ questionScore);
-                } else if (versionNum == 5) {
-                    retrievedQuestion.setQuestion6Id(questionScore);
-                    Log.d("Question 6 Score Stored: ", ""+ questionScore);
-                }
-
-                // Update the quiz question in the database
-                quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
+                Log.d("TotalGroupScore: ", "" + totalGroupScore);
+                // handling the update the  UpdateQuizScoresTask quizQuestionScore Async Task
+                new UpdateQuizScoresTask().execute(versionNum, totalGroupScore, retrievedQuestion, quizQuestionData);
             }
-
-
-
-
         });
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //this.onViewCreated(requireView(), null);
+        // Open the database
+        if( quizQuestionData != null && !quizQuestionData.isDBOpen() ) {
+            quizQuestionData.open();
+            Log.d( TAG, "QuizSwipeFragment.onResume(): opening Quiz Questions DB" );
+        }
 
+        if( stateData != null && !stateData.isDBOpen() ) {
+            stateData.open();
+            Log.d( TAG, "QuizSwipeFragment.onResume(): opening State DB" );
+        }
 
-
-
-
-
-
+        this.retrievedQuestion = this.quizQuestionData.getLatestQuizQuestion();
+        // handling the update the  UpdateQuizScoresTask quizQuestionScore Async Task
+        new UpdateQuizScoresTask().execute(
+                this.versionNum, this.totalGroupScore,
+                this.retrievedQuestion, this.quizQuestionData);
+        Log.d("Resumed Fragment Score", "" + retrievedQuestion.getCorrectAnswers());
 
     }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        this.retrievedQuestion = quizQuestionData.getLatestQuizQuestion();
+        Log.d("Paused Fragment Score", "" + retrievedQuestion.getCorrectAnswers());
+
+        if (stateData != null) {
+            stateData.close(); // Close the database connection
+            //stateData = null; // Set the reference to null to avoid reusing a closed database
+        }
+
+        if (quizQuestionData != null) {
+            quizQuestionData.close(); // Close the quiz question database connection
+            //quizQuestionData = null; // Set the reference to null to avoid reusing a closed database
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the current state data
+        outState.putInt("totalGroupScore", this.totalGroupScore);
+        outState.putBoolean("checkGroup1", this.checkGroup1);
+        outState.putBoolean("checkGroup2", this.checkGroup2);
+        // Save other relevant state data here
+    }
+
+
+    private class UpdateQuizScoresTask extends AsyncTask<Object, Void, Void> {
+        @Override
+        protected Void doInBackground(Object... params) {
+            int versionNum = (int) params[0];
+            int totalGroupScore = (int) params[1];
+            QuizQuestion retrievedQuestion = (QuizQuestion) params[2];
+            QuizQuestionData quizQuestionData = (QuizQuestionData) params[3];
+
+            // update the number of questions selection for group One
+            if(groupOneSelection > 0 && !groupOneAnswered) {
+                retrievedQuestion.setQuestionsAnswered( retrievedQuestion.getQuestionsAnswered() + 1 );
+                groupOneAnswered = true;
+                Log.d("Quiz Questions Answered", "" + retrievedQuestion.getQuestionsAnswered());
+            }
+
+            // update the number of questions selection for Group Two
+            if(groupTwoSelection > 0 && !groupTwoAnswered) {
+                retrievedQuestion.setQuestionsAnswered( retrievedQuestion.getQuestionsAnswered() + 1 );
+                groupTwoAnswered = true;
+                Log.d("Quiz Questions Answered", "" + retrievedQuestion.getQuestionsAnswered());
+            }
+
+            Log.d("UpdateQuizScoresTask", "Version number: " + versionNum);
+            Log.d("UpdateQuizScoresTask", "Total Group Score: " + totalGroupScore);
+
+            if (versionNum >= 0 && versionNum <= 5) {
+                int questionId = versionNum + 1;
+                switch (questionId) {
+                    case 1:
+                        retrievedQuestion.setQuestion1Id(totalGroupScore);
+                        break;
+                    case 2:
+                        retrievedQuestion.setQuestion2Id(totalGroupScore);
+                        break;
+                    case 3:
+                        retrievedQuestion.setQuestion3Id(totalGroupScore);
+                        break;
+                    case 4:
+                        retrievedQuestion.setQuestion4Id(totalGroupScore);
+                        break;
+                    case 5:
+                        retrievedQuestion.setQuestion5Id(totalGroupScore);
+                        break;
+                    case 6:
+                        retrievedQuestion.setQuestion6Id(totalGroupScore);
+                        break;
+                }
+
+                Log.d("UpdateQuizScoresTask", "Updating score for question " + questionId);
+
+                // Perform the database update here
+                retrievedQuestion.setCorrectAnswers(
+                        retrievedQuestion.getQuestion1Id() + retrievedQuestion.getQuestion2Id() +  retrievedQuestion.getQuestion3Id() +
+                                retrievedQuestion.getQuestion4Id() + retrievedQuestion.getQuestion5Id() + retrievedQuestion.getQuestion6Id()
+                );
+                quizQuestionData.updateQuizQuestion(retrievedQuestion, retrievedQuestion.getId());
+
+                Log.d("UpdateQuizScoresTask", "Database update performed for question " + questionId);
+            } else {
+                Log.d("UpdateQuizScoresTask", "Invalid version number: " + versionNum);
+            }
+
+            //quizQuestionData.close();
+            return null;
+        }
+    }
+
+
+
+
 
 
     // This will set the total number of Screens to swipe
@@ -340,6 +437,9 @@ public class QuizSwipeFragment extends Fragment {
                 // Open the CSV file from the assets folder
                 InputStream in_s = context.getAssets().open("StateDetails.csv");
 
+                // opening the DB
+                //SQLiteDatabase db = this.stateData.open();
+
                 // Read the CSV data
                 CSVReader reader = new CSVReader(new InputStreamReader(in_s));
                 String[] nextRow;
@@ -357,6 +457,7 @@ public class QuizSwipeFragment extends Fragment {
                     state.setStatehood(Integer.parseInt(nextRow[4]));
                     state.setCapitalSince(Integer.parseInt(nextRow[5]));
                     state.setSizeRank(Integer.parseInt(nextRow[6]));
+
 
 
                     states.add(state);
@@ -393,15 +494,13 @@ public class QuizSwipeFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            stateData.close();
+            //stateData.close();
 
             return null;
         }
 
-        // Might need to do onPostExecute() to update UI elements asyncronously
+
     }
-
-
 
 
 }

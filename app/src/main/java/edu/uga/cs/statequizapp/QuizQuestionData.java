@@ -24,8 +24,13 @@ public class QuizQuestionData {
         database = dbHelper.getWritableDatabase();
     }
 
+    public boolean isDBOpen() {
+        return database.isOpen();
+    }
+
     public void close() {
-        dbHelper.close();
+        if(dbHelper != null && this.isDBOpen())
+            dbHelper.close();
     }
 
     // Add a new quiz question to the database
@@ -171,4 +176,21 @@ public class QuizQuestionData {
 
         return quizQuestion;
     }
+
+//    // Method to retrieve the last 10 quiz questions as a List
+//    public List<QuizQuestion> getLastTenQuizQuestions() {
+//        List<QuizQuestion> quizQuestions = new ArrayList<>();
+//
+//        // Open the database for reading
+//        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//        QuizQuestion retrievedQuestion = this.getLatestQuizQuestion();
+//        for(int i = 0; i < 10; i++) {
+//
+//            quizQuestions(1) = retrievedQuestion;
+//            retrievedQuestion = this.getAllQuizQuestions();
+//        }
+//        db.close();
+//
+//        return quizQuestions;
+//    }
 }

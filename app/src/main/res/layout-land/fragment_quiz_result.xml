@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
     android:padding="16dp"
     tools:context=".QuizResultFragment">
 
     <!-- Title "High Score" -->
+
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -26,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView">
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView">
 
         <TextView
             android:id="@+id/textQuizResults"

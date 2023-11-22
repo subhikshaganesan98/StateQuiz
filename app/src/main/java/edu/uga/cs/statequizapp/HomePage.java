@@ -1,6 +1,7 @@
 package edu.uga.cs.statequizapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,15 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class HomePage extends Fragment {
+
+    private QuizQuestionData quizQuestionData;
+    private QuizQuestion quizQuestion;
 
     public HomePage() {
         // Required empty public constructor
@@ -32,6 +41,45 @@ public class HomePage extends Fragment {
                 transaction.replace(R.id.fragment_container, quizFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+
+                quizQuestionData = new QuizQuestionData(view.getContext());
+                quizQuestionData.open();
+
+                // setting the current time
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                TimeZone easternTimeZone = TimeZone.getTimeZone("America/New_York");
+                timeFormat.setTimeZone(easternTimeZone);
+                String formattedTime = timeFormat.format(new Date()); // Format the current date and time as a string
+
+                // setting the current date
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Example format
+                String currentDate = dateFormat.format(new Date());
+
+                quizQuestion = new QuizQuestion(currentDate, formattedTime, 0, 0, 0, 0,0,0, 0, 0);
+                quizQuestionData.addQuizQuestion(quizQuestion);
+
+
+
+                // Perform the database update here
+                quizQuestion.setCorrectAnswers(
+                        quizQuestion.getQuestion1Id() + quizQuestion.getQuestion2Id() +  quizQuestion.getQuestion3Id() +
+                                quizQuestion.getQuestion4Id() + quizQuestion.getQuestion5Id() + quizQuestion.getQuestion6Id()
+                );
+
+
+                QuizQuestion retrievedQuestion = quizQuestion;
+
+
+                quizQuestionData.updateQuizQuestion(quizQuestion, quizQuestion.getId());
+                quizQuestion = quizQuestionData.getLatestQuizQuestion();
+
+                Log.d("Correct Answers: ", "" + quizQuestion.getCorrectAnswers());
+                Log.d("Correct Date: ", "" + quizQuestion.getQuizDate() );
+                Log.d("Correct Time: ", "" + quizQuestion.getTime() );
+
+
+                quizQuestionData.close();
+
             }
         });
 

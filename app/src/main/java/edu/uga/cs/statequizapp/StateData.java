@@ -3,23 +3,19 @@ package edu.uga.cs.statequizapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 public class StateData {
 
     public static final String DEBUG_TAG = "StateData";
 
-    private SQLiteDatabase db;
     private SQLiteOpenHelper stateDbHelper;
+    private SQLiteDatabase db;
 
     private static final String[] allColumns = {
             StateDBHelper.COLUMN_ID,
@@ -36,83 +32,29 @@ public class StateData {
         this.stateDbHelper = StateDBHelper.getInstance(context);
     }
 
-
-
-    public List<State> retrieveLast50States() {
-        ArrayList<State> states = new ArrayList<>();
-        Cursor cursor = null;
-        int columnIndex;
-
-        try {
-            // Adjust the SQL query to retrieve the last 50 rows
-            cursor = db.query(
-                    StateDBHelper.TABLE_STATES, allColumns,
-                    null, null, null, null,
-                    StateDBHelper.COLUMN_ID + " DESC", "49"
-            );
-
-            if (cursor != null && cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    if (cursor.getColumnCount() >= 8) {
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_ID);
-                        long id = cursor.getLong(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_NAME);
-                        String name = cursor.getString(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_CAPITAL_CITY);
-                        String capitalCity = cursor.getString(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_SECOND_CITY);
-                        String secondCity = cursor.getString(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_THIRD_CITY);
-                        String thirdCity = cursor.getString(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_STATEHOOD);
-                        int statehood = cursor.getInt(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_CAPITAL_SINCE);
-                        int capitalSince = cursor.getInt(columnIndex);
-                        columnIndex = cursor.getColumnIndex(StateDBHelper.COLUMN_SIZE_RANK);
-                        int sizeRank = cursor.getInt(columnIndex);
-
-                        State state = new State(name, capitalCity, secondCity, thirdCity,
-                                statehood, capitalSince, sizeRank);
-                        state.setId(id);
-                        states.add(state);
-                        Log.d(DEBUG_TAG, "Retrieved State: " + state);
-                    }
-                }
-            }
-            if (cursor != null)
-                Log.d(DEBUG_TAG, "Number of records from DB: " + cursor.getCount());
-            else
-                Log.d(DEBUG_TAG, "Number of records from DB: 0");
-        } catch (Exception e) {
-            Log.d(DEBUG_TAG, "Exception caught: " + e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return states;
-    }
-
     // Open the database
     public void open() {
-        db = stateDbHelper.getWritableDatabase();
-        Log.d(DEBUG_TAG, "StateData: db open");
+        if (db == null || !db.isOpen()) {
+            db = stateDbHelper.getWritableDatabase();
+            Log.d(DEBUG_TAG, "StateData: db open");
+        }
     }
 
     // Close the database
     public void close() {
-        if (stateDbHelper != null) {
-            stateDbHelper.close();
+        if (db != null && db.isOpen()) {
+            db.close();
             Log.d(DEBUG_TAG, "StateData: db closed");
         }
     }
 
     public boolean isDBOpen() {
-        return db.isOpen();
+        return db != null && db.isOpen();
     }
 
     // Store a new state in the database
     public State storeState(State state) {
+        open(); // Ensure the database is open
         ContentValues values = new ContentValues();
         values.put(StateDBHelper.COLUMN_NAME, state.getName());
         values.put(StateDBHelper.COLUMN_CAPITAL_CITY, state.getCapitalCity());
@@ -131,9 +73,9 @@ public class StateData {
         return state;
     }
 
-
     // Retrieve a specific state by its ID
     public State retrieveStateById(long id) {
+        open(); // Ensure the database is open
         Cursor cursor = null;
         State state = null;
 
@@ -147,7 +89,7 @@ public class StateData {
                 state = cursorToState(cursor);
             }
         } catch (Exception e) {
-            Log.d(DEBUG_TAG, "Exception caught: " + e);
+            Log.d(DEBUG_TAG, "Retrieve By State Exception caught: " + e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -175,7 +117,34 @@ public class StateData {
         return state;
     }
 
+    public List<State> retrieveLast50States() {
+        open(); // Ensure the database is open
+        ArrayList<State> states = new ArrayList<>();
+        Cursor cursor = null;
 
+        try {
+            // Adjust the SQL query to retrieve the last 50 rows
+            cursor = db.query(
+                    StateDBHelper.TABLE_STATES, allColumns,
+                    null, null, null, null,
+                    StateDBHelper.COLUMN_ID + " DESC", "49"
+            );
 
-
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    if (cursor.getColumnCount() >= 8) {
+                        states.add(cursorToState(cursor));
+                    }
+                }
+            }
+            Log.d(DEBUG_TAG, "retrieveLast50States Number of records from DB: " + cursor.getCount());
+        } catch (Exception e) {
+            Log.d(DEBUG_TAG, "retrieveLast50States Exception caught: " + e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return states;
+    }
 }
